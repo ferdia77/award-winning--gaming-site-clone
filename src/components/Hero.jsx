@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import { TiLocationArrow } from "react-icons/ti";
 import { useGSAP } from "@gsap/react";
-import gsap from 'gsap';
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
@@ -29,68 +29,65 @@ const Hero = () => {
   };
 
   useEffect(() => {
-    if(loadedVideos === totalVideos -1) {
-        setIsLoading(false);
+    if (loadedVideos === totalVideos - 1) {
+      setIsLoading(false);
     }
-  })
+  });
 
   useGSAP(() => {
-    if(hasClicked) {
-        gsap.set('#next-video', {visibility: 'visible'});
+    if (hasClicked) {
+      gsap.set("#next-video", { visibility: "visible" });
 
-        gsap.to('#next-video', {
-            scale: 1,
-            width: '100%',
-            height: '100%',
-            duration: 1,
-            ease: 'power1.inOut',
-            onStart: () => nextVideoRef.current.play(),
-        })
+      gsap.to("#next-video", {
+        scale: 1,
+        width: "100%",
+        height: "100%",
+        duration: 1,
+        ease: "power1.inOut",
+        onStart: () => nextVideoRef.current.play(),
+      });
 
-        gsap.from('#current-video', {
-            transformOrigin: 'center center',
-            scale: 0,
-            duration: 1.5,
-            ease: 'power1.inOut'
-            })
-            
+      gsap.from("#current-video", {
+        transformOrigin: "center center",
+        scale: 0,
+        duration: 1.5,
+        ease: "power1.inOut",
+      });
     }
-  }, [currentIndex, true])
+  }, [currentIndex, true]);
 
   useGSAP(() => {
-    gsap.set('#video-frame', {
-        clipPath: 'polygon(14%, 0%, 72%, 0%, 90%, 100%, 0%, 100%)',
-        borderRadius: ' 0 0 40% 10%'
-    })
+    gsap.set("#video-frame", {
+      clipPath: "polygon(14%, 0%, 72%, 0%, 90%, 100%, 0%, 100%)",
+      borderRadius: " 0 0 40% 10%",
+    });
 
-    gsap.from('#video-frame', {
-        clipPath: 'polygon(0%, 0%, 100%, 0%, 100%, 100%, 0%, 100%)',
-        borderRadius: ' 0, 0, 0, 0',
-        ease: 'power1.inOut',
-        scrollTrigger: {
-            trigger: '#video-frame',
-            start: 'center center',
-            end: 'bottom center',
-            scrub: true,
-        }
-
-    })
-  })
+    gsap.from("#video-frame", {
+      clipPath: "polygon(0%, 0%, 100%, 0%, 100%, 100%, 0%, 100%)",
+      borderRadius: " 0, 0, 0, 0",
+      ease: "power1.inOut",
+      scrollTrigger: {
+        trigger: "#video-frame",
+        start: "center center",
+        end: "bottom center",
+        scrub: true,
+      },
+    });
+  });
 
   const getVideoSrc = (index) => `videos/hero-${index}.mp4`;
 
   return (
     <div className="relative h-dvh w-screen overflow-x-hidden">
-
-        {isLoading && (
-            <div className="flex-center absolute z-[100] h-dvh w-screen overflow-hidden bg-violet-50">
-                <div className="three-body">
-                    <div className="three-body__dot" />
-                    <div className="three-body__dot" />
-                    <div className="three-body__dot" />
-                </div>
-            </div>
-        )}
+      {isLoading && (
+        <div className="flex-center absolute z-[100] h-dvh w-screen overflow-hidden bg-violet-50">
+          <div className="three-body">
+            <div className="three-body__dot" />
+            <div className="three-body__dot" />
+            <div className="three-body__dot" />
+          </div>
+        </div>
+      )}
 
       <div
         id="video-frame"
@@ -108,7 +105,7 @@ const Hero = () => {
             >
               <video
                 ref={nextVideoRef}
-                src={getVideoSrc(upcomingVideoIndex)}
+                src={getVideoSrc((currentIndex % totalVideos) + 1)}
                 loop
                 muted
                 id="current-video"
@@ -128,15 +125,14 @@ const Hero = () => {
             </div>
           </div>
           <video
-            ref={nextVideoRef}
             src={getVideoSrc(
               currentIndex === totalVideos - 1 ? 1 : currentIndex
             )}
             autoPlay
             loop
             muted
-            id="next-video"
             className="absolute left-0 top-0 size-full object-cover object-center"
+            onLoadedData={handleVideoLoad}
           />
         </div>
         <div>
@@ -168,11 +164,11 @@ const Hero = () => {
           </div>
         </div>
         <h1
-            className="special-font hero-heading absolute bottom-5
+          className="special-font hero-heading absolute bottom-5
                 right-5 text-black-75"
-          >
-            G<b>a</b>ming
-          </h1>
+        >
+          G<b>a</b>ming
+        </h1>
       </div>
     </div>
   );
